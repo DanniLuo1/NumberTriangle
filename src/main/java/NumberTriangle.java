@@ -109,8 +109,7 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-
-        // TODO define any variables that you want to use to store things
+        java.util.ArrayList<java.util.ArrayList<NumberTriangle>> rows = new java.util.ArrayList<>();
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
@@ -118,18 +117,38 @@ public class NumberTriangle {
 
         String line = br.readLine();
         while (line != null) {
-
-            // remove when done; this line is included so running starter code prints the contents of the file
-            System.out.println(line);
-
-            // TODO process the line
-
-            //read the next line
+            line = line.trim();
+            String[] parts = line.split(" ");
+            java.util.ArrayList<NumberTriangle> currentRow = new java.util.ArrayList<>();
+            for (int i = 0; i < parts.length; i++) {
+                if (!parts[i].isEmpty()) {
+                    int value = Integer.valueOf(parts[i]).intValue();
+                    NumberTriangle node = new NumberTriangle(value);
+                    currentRow.add(node);
+                }
+            }
+            rows.add(currentRow);
             line = br.readLine();
         }
         br.close();
+        if (rows.isEmpty()) {
+            return null;
+        }
+
+        top = rows.get(0).get(0);
+
+        for (int i = 0; i < rows.size() - 1; i++) {
+            java.util.ArrayList<NumberTriangle> currentRow = rows.get(i);
+            java.util.ArrayList<NumberTriangle> nextRow = rows.get(i + 1);
+            for (int j = 0; j < currentRow.size(); j++) {
+                NumberTriangle currentNode = currentRow.get(j);
+                currentNode.setLeft(nextRow.get(j));
+                currentNode.setRight(nextRow.get(j + 1));
+            }
+        }
         return top;
     }
+
 
     public static void main(String[] args) throws IOException {
 
